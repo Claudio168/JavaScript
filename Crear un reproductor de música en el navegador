@@ -1,0 +1,55 @@
+const audio = new Audio();
+const tracks = [
+  {
+    title: 'Canción 1',
+    url: 'ruta_de_la_cancion_1.mp3',
+  },
+  {
+    title: 'Canción 2',
+    url: 'ruta_de_la_cancion_2.mp3',
+  },
+  {
+    title: 'Canción 3',
+    url: 'ruta_de_la_cancion_3.mp3',
+  },
+];
+
+const player = document.querySelector('.player');
+const playBtn = document.querySelector('.play-btn');
+const title = document.querySelector('.title');
+
+let currentTrack = 0;
+title.textContent = tracks[currentTrack].title;
+
+function playTrack() {
+  audio.src = tracks[currentTrack].url;
+  audio.play();
+  player.classList.add('playing');
+}
+
+function pauseTrack() {
+  audio.pause();
+  player.classList.remove('playing');
+}
+
+function nextTrack() {
+  currentTrack++;
+  if (currentTrack > tracks.length - 1) {
+    currentTrack = 0;
+  }
+  title.textContent = tracks[currentTrack].title;
+  pauseTrack();
+  playTrack();
+}
+
+playBtn.addEventListener('click', function() {
+  if (player.classList.contains('playing')) {
+    pauseTrack();
+  } else {
+    playTrack();
+  }
+});
+
+audio.addEventListener('ended', function() {
+  nextTrack();
+});
