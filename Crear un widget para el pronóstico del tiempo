@@ -1,0 +1,72 @@
+//HTML
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Widget del pronóstico del tiempo</title>
+    <style>
+      #weather-widget {
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 250px;
+      }
+      h2 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+      .weather-icon {
+        display: block;
+        margin: 0 auto;
+        width: 70px;
+      }
+      .weather-description {
+        font-size: 0.8em;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .weather-temp {
+        font-size: 1.5em;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="weather-widget">
+      <h2>Pronóstico del tiempo para <span id="city-name"></span></h2>
+      <img class="weather-icon" src="" alt="icono del tiempo">
+      <div class="weather-description"></div>
+      <div class="weather-temp"></div>
+    </div>
+    <script src="weather.js"></script>
+  </body>
+</html>
+
+//weather.js
+
+const apiKey = 'TU_API_KEY';
+const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+
+const cityNameElement = document.getElementById('city-name');
+const weatherIconElement = document.querySelector('.weather-icon');
+const weatherDescriptionElement = document.querySelector('.weather-description');
+const weatherTempElement = document.querySelector('.weather-temp');
+
+function getWeather(cityName) {
+  const url = `${apiUrl}?q=${cityName}&units=metric&appid=${apiKey}`;
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      cityNameElement.textContent = data.name;
+      weatherIconElement.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+      weatherDescriptionElement.textContent = data.weather[0].description;
+      weatherTempElement.textContent = `${data.main.temp} °C`;
+    })
+    .catch(error => console.error(error));
+}
+
+// Por defecto se muestra el pronóstico para Madrid
+getWeather('Madrid');
+
+//Para Barcelona 
+getWeather('Barcelona');
+
