@@ -1,0 +1,24 @@
+let oldData = null;
+
+function getData() {
+  fetch("https://api.example.com/data")
+    .then(response => response.json())
+    .then(data => {
+      // Compara los datos actuales con los antiguos
+      if (!oldData || JSON.stringify(oldData) !== JSON.stringify(data)) {
+        // Los datos han cambiado, actualiza la página
+        updatePage(data);
+        oldData = data;
+      }
+    })
+    .catch(error => console.error(error));
+}
+
+// Actualiza la página con los nuevos datos
+function updatePage(data) {
+  // Haz algo con los nuevos datos
+  console.log("Los datos han cambiado:", data);
+}
+
+// Llama a getData() cada 5 segundos
+setInterval(getData, 5000);
