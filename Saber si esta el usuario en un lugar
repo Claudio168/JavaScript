@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verificar ubicación</title>
+</head>
+<body>
+  <button onclick="comenzarCompartirUbicacion()">Comenzar compartir ubicación</button>
+  <button onclick="detenerCompartirUbicacion()">Detener compartir ubicación</button>
+
+  <script>
+    var intervalId;
+    var plantaLatitud = -33.0038098; // Latitud del centro de la planta
+    var plantaLongitud = -71.4892897; // Longitud del centro de la planta
+    var rangoDistancia = 1; // Radio del rango en metros
+
+    window.onload = function() {
+      comenzarCompartirUbicacion();
+    };
+
+    function comenzarCompartirUbicacion() {
+      intervalId = setInterval(obtenerYVerificarUbicacion, 10000); // 60000 ms = 1 minuto
+      obtenerYVerificarUbicacion(); // Verificar ubicación inmediatamente
+    }
+
+    function detenerCompartirUbicacion() {
+      clearInterval(intervalId);
+    }
+
+    function obtenerYVerificarUbicacion() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(verificarUbicacion);
+      } else {
+        alert("La geolocalización no es compatible en este navegador.");
+      }
+    }
+
+    function verificarUbicacion(posicion) {
+      var latitud = posicion.coords.latitude;
+      var longitud = posicion.coords.longitude;
+
+      var distancia = calcularDistancia(plantaLatitud, plantaLongitud, latitud, longitud);
+
+      if (distancia <= rangoDistancia) {
+        console.log("El usuario se encuentra dentro del rango de la planta.");
+      } else {
+        console.log("El usuario está fuera del rango de la planta.");
+      }
+    }
+
+    // Función para calcular la distancia en metros entre dos puntos geográficos utilizando la fórmula de Haversine
+    function calcularDistancia(lat1, lon1, lat2, lon2) {
+      var radioTierra = 6371; // Radio de la Tierra en kilómetros
+      var dLat = toRad(lat2 - lat1);
+      var dLon = toRad(lon2 - lon1);
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var distancia = radioTierra * c * 1000; // Convertir a metros
+      return distancia;
+    }
+
+    // Función para convertir grados a radianes
+    function toRad(grados) {
+      return grados * Math.PI / 180;
+    }
+  </script>
+</body>
+</html>
