@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verificar ubicación</title>
+</head>
+<body>
+  <script>
+    var intervalId;
+
+    window.onload = function() {
+      comenzarCompartirUbicacion();
+    };
+
+    function comenzarCompartirUbicacion() {
+      intervalId = setInterval(obtenerYEnviarUbicacion, 10000); // 60000 ms = 1 minuto
+      obtenerYEnviarUbicacion(); // Compartir ubicación inmediatamente
+    }
+
+    function detenerCompartirUbicacion() {
+      clearInterval(intervalId);
+    }
+
+    function obtenerYEnviarUbicacion() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(enviarUbicacion);
+      } else {
+        alert("La geolocalización no es compatible en este navegador.");
+      }
+    }
+
+    function enviarUbicacion(posicion) {
+      var latitud = posicion.coords.latitude;
+      var longitud = posicion.coords.longitude;
+
+      // Enviar los datos de ubicación al servidor
+      // Puedes usar AJAX, Fetch API o cualquier otro método para enviar los datos al servidor
+
+      console.log("Ubicación compartida: Latitud: " + latitud + ", Longitud: " + longitud);
+    }
+  </script>
+</body>
+</html>
